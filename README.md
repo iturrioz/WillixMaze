@@ -2,6 +2,7 @@ WillixMaze
 ==========
 
 FOSS coding for Euskal Encounter 2013
+http://www.euskal.org/en/foss-coding.html
 
 ### Quickstart
 
