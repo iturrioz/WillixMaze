@@ -31,7 +31,7 @@ class Level(val info: Level.Info, bounds: Level.Bounds) {
   def circle =
     new Circle(bounds.xOffset + cellWidth / 2f * (circlePosition.x), bounds.yOffset + cellHeight / 2f * (circlePosition.y), radius)
 
-  // Recursive backtracker
+  // Maze generation. Recursive backtracker (http://en.wikipedia.org/wiki/Maze_generation_algorithm)
   private val maze = {
     val initialMaze = Array.tabulate(width * 2 + 1, height * 2 + 1)((_, _) => 1)
     val initial = Random.nextInt(height) * 2 + 1
@@ -67,6 +67,7 @@ class Level(val info: Level.Info, bounds: Level.Bounds) {
     initialMaze
   }
 
+  // Create {@Link Line} type walls.
   val lines = maze.zipWithIndex.map {
     case (column, x) =>
       column.zipWithIndex.map {
@@ -83,6 +84,7 @@ class Level(val info: Level.Info, bounds: Level.Bounds) {
       }.flatten
   }.flatten.toList
 
+  // Check if the movement is possible and move it.
   def moveCircle(x: Int, y: Int) {
     if (x != y && (x == 0 || y == 0)) {
       val wall = Position(x + circlePosition.x, y + circlePosition.y)
@@ -94,6 +96,9 @@ class Level(val info: Level.Info, bounds: Level.Bounds) {
     }
   }
 
+  /*
+    A class that represents the position of walls and cells
+   */
   case class Position(x: Int, y: Int) {
     def getWalls(condition: (Position) => Boolean = (Position) => true): List[Position] =
       List((0, 1), (0, -1), (1, 0), (-1, 0)).map {
@@ -114,6 +119,9 @@ class Level(val info: Level.Info, bounds: Level.Bounds) {
 
 object Level {
 
+  /*
+    Level difficulty info
+   */
   case class Info(number: Int, width: Int, height: Int, solveTime: Int) {
     private var highScore = 0l
 
@@ -124,6 +132,7 @@ object Level {
     }
   }
 
+  // List of levels
   val levels = List(
     Info(1, 10, 10, 60),
     Info(2, 12, 12, 60),
@@ -141,6 +150,9 @@ object Level {
     Info(14, 37, 37, 180),
     Info(15, 40, 40, 180))
 
+  /*
+    Rendering bounds
+   */
   case class Bounds(widthPixels: Float, heightPixels: Float, xOffset: Int, yOffset: Int)
 
 }
